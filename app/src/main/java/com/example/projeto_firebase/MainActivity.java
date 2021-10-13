@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 arrayAdapterAluno = new ArrayAdapter<Aluno>(MainActivity.this,
                         android.R.layout.simple_list_item_1, list_Aluno);
+
+                arrayAdapterAluno.sort(null);
                 listV_dados.setAdapter(arrayAdapterAluno);
+
             }
 
             @Override
@@ -85,9 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(MainActivity.this);
+
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(true);
+        //firebaseDatabase.setPersistenceEnabled(true);
         databaseReference = firebaseDatabase.getReference();
+        databaseReference.keepSynced(true);
     }
 
     @Override
@@ -99,19 +105,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         Context context = getApplicationContext();
-
+        String mensagemToast = "";
         int id = item.getItemId();
         if(id == R.id.menu_novo){
             if (!edtNome.getText().toString().isEmpty() && !edtMatricula.getText().toString().isEmpty()) {
-                Aluno al = new Aluno();
-                al.setUid(UUID.randomUUID().toString());
-                al.setName(edtNome.getText().toString());
-                al.setRegistration(edtMatricula.getText().toString());
-                databaseReference.child("Aluno").child(al.getUid()).setValue(al);
-                limparCampos();
+                if (!registrationExists(edtMatricula.getText().toString())){
+                    Aluno al = new Aluno();
+                    al.setUid(UUID.randomUUID().toString());
+                    al.setName(edtNome.getText().toString());
+                    al.setRegistration(edtMatricula.getText().toString());
+                    databaseReference.child("Aluno").child(al.getUid()).setValue(al);
+                    limparCampos();
+                }else mensagemToast = "Erro! Matrícula já existente!";
             }else{
-                Toast.makeText(context, "Erro ao inserir nome com campos vazios.", Toast.LENGTH_SHORT).show();
+                mensagemToast = "Erro ao inserir nome com campos vazios.";
             }
+
+            Toast.makeText(context, mensagemToast, Toast.LENGTH_SHORT).show();
         }else if (id == R.id.menu_atualiza) {
             if (alunoSelecionado != null) {
                 Aluno a = new Aluno();
@@ -125,10 +135,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "Selecione um registro para atualizar!", Toast.LENGTH_SHORT).show();
             }
         }else if (id == R.id.menu_deleta) {
-            Aluno a = new Aluno();
-            a.setUid(alunoSelecionado.getUid());
-            databaseReference.child("Aluno").child(a.getUid()).removeValue();
-            limparCampos();
+            if (alunoSelecionado != null) {
+                Aluno a = new Aluno();
+                a.setUid(alunoSelecionado.getUid());
+                databaseReference.child("Aluno").child(a.getUid()).removeValue();
+                limparCampos();
+            }else Toast.makeText(context, "Selecione um registro para excluir!", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
@@ -137,4 +149,13 @@ public class MainActivity extends AppCompatActivity {
         edtNome.setText("");
         edtMatricula.setText("");
     }
+
+    private boolean registrationExists(String registration){
+        for (Aluno a : list_Aluno){
+            if (a.getRegistration().equals(registration))
+                return true;
+        }
+        return false;
+    }
+
 }

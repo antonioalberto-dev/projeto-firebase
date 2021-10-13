@@ -1,6 +1,8 @@
 package com.example.projeto_firebase.modelo;
 
-public class Aluno {
+import java.util.Comparator;
+
+public class Aluno implements Comparable<Aluno>{
     private String uid;
     private String name;
     private String registration;
@@ -32,5 +34,10 @@ public class Aluno {
     @Override
     public String toString() {
         return name;
+    }
+
+    @Override
+    public int compareTo(Aluno o) {
+        return this.name.compareTo(o.name);
     }
 }
