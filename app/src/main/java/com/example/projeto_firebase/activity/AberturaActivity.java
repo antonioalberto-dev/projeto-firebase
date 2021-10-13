@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.example.projeto_firebase.MainActivity;
 import com.example.projeto_firebase.R;
@@ -12,7 +13,7 @@ import com.example.projeto_firebase.R;
 public class AberturaActivity extends AppCompatActivity {
 
     String TAG = "Aula de Reforco";
-    int tempoDEEspera = 1000 *5;
+    int tempoDEEspera = 1000 *5;//aqui coloca o tempo de espera
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
