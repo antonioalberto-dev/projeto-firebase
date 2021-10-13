@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -11,28 +12,32 @@
         android:id="@+id/editNome"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Nome"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="10dp"
-        android:padding="5dp"/>
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:fontFamily="@font/scada"
+        android:hint="Nome"
+        android:inputType="textPersonName"
+        android:padding="5dp" />
 
     <EditText
         android:id="@+id/editMatricula"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Matricula"
-        android:layout_marginTop="10px"
         android:layout_marginHorizontal="30dp"
-        android:padding="5dp"/>
+        android:layout_marginTop="10px"
+        android:background="#FFFFFF"
+        android:ems="10"
+        android:fontFamily="@font/scada"
+        android:hint="Matricula"
+        android:inputType="textPersonName"
+        android:padding="5dp" />
 
     <ListView
         android:id="@+id/listV_dados"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"/>
+        android:padding="10dp" />
 
 </LinearLayout>
