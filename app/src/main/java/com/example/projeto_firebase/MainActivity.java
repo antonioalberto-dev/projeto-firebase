@@ -3,6 +3,7 @@ package com.example.projeto_firebase;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.example.projeto_firebase.modelo.Aluno;
+import com.example.projeto_firebase.modelo.*;
+
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -95,21 +98,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Context context = getApplicationContext();
+
         int id = item.getItemId();
         if(id == R.id.menu_novo){
-            Aluno al = new Aluno();
-            al.setUid(UUID.randomUUID().toString());
-            al.setName(edtNome.getText().toString());
-            al.setRegistration(edtMatricula.getText().toString());
-            databaseReference.child("Aluno").child(al.getUid()).setValue(al);
-            limparCampos();
+            if (!edtNome.getText().toString().isEmpty() && !edtMatricula.getText().toString().isEmpty()) {
+                Aluno al = new Aluno();
+                al.setUid(UUID.randomUUID().toString());
+                al.setName(edtNome.getText().toString());
+                al.setRegistration(edtMatricula.getText().toString());
+                databaseReference.child("Aluno").child(al.getUid()).setValue(al);
+                limparCampos();
+            }else{
+                Toast.makeText(context, "Erro ao inserir nome com campos vazios.", Toast.LENGTH_SHORT).show();
+            }
         }else if (id == R.id.menu_atualiza) {
-            Aluno a = new Aluno();
-            a.setUid(alunoSelecionado.getUid());
-            a.setName(edtNome.getText().toString().trim());
-            a.setRegistration(edtMatricula.getText().toString().trim());
-            databaseReference.child("Aluno").child(a.getUid()).setValue(a);
-            limparCampos();
+            if (alunoSelecionado != null) {
+                Aluno a = new Aluno();
+                a.setUid(alunoSelecionado.getUid());
+                a.setName(edtNome.getText().toString().trim());
+                a.setRegistration(edtMatricula.getText().toString().trim());
+                databaseReference.child("Aluno").child(a.getUid()).setValue(a);
+                limparCampos();
+                Toast.makeText(context, "Registro atualizado!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Selecione um registro para atualizar!", Toast.LENGTH_SHORT).show();
+            }
         }else if (id == R.id.menu_deleta) {
             Aluno a = new Aluno();
             a.setUid(alunoSelecionado.getUid());
