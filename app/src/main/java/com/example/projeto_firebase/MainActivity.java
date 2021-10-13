@@ -135,10 +135,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(context, "Selecione um registro para atualizar!", Toast.LENGTH_SHORT).show();
             }
         }else if (id == R.id.menu_deleta) {
-            Aluno a = new Aluno();
-            a.setUid(alunoSelecionado.getUid());
-            databaseReference.child("Aluno").child(a.getUid()).removeValue();
-            limparCampos();
+            if (alunoSelecionado != null) {
+                Aluno a = new Aluno();
+                a.setUid(alunoSelecionado.getUid());
+                databaseReference.child("Aluno").child(a.getUid()).removeValue();
+                limparCampos();
+            }else Toast.makeText(context, "Selecione um registro para excluir!", Toast.LENGTH_SHORT).show();
         }
         return true;
     }
