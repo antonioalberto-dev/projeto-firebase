@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Aluno> list_Aluno = new ArrayList<Aluno>();
     private ArrayAdapter<Aluno> arrayAdapterAluno;
 
+    Aluno alunoSelecionado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
         inicializarFirebase();
         eventoDatabase();
+
+        listV_dados.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                alunoSelecionado = (Aluno) adapterView.getItemAtPosition(i);
+                edtNome.setText(alunoSelecionado.getName());
+                edtMatricula.setText(alunoSelecionado.getRegistration());
+            }
+        });
     }
 
     private void eventoDatabase(){
@@ -89,6 +102,18 @@ public class MainActivity extends AppCompatActivity {
             al.setName(edtNome.getText().toString());
             al.setRegistration(edtMatricula.getText().toString());
             databaseReference.child("Aluno").child(al.getUid()).setValue(al);
+            limparCampos();
+        }else if (id == R.id.menu_atualiza) {
+            Aluno a = new Aluno();
+            a.setUid(alunoSelecionado.getUid());
+            a.setName(edtNome.getText().toString().trim());
+            a.setRegistration(edtMatricula.getText().toString().trim());
+            databaseReference.child("Aluno").child(a.getUid()).setValue(a);
+            limparCampos();
+        }else if (id == R.id.menu_deleta) {
+            Aluno a = new Aluno();
+            a.setUid(alunoSelecionado.getUid());
+            databaseReference.child("Aluno").child(a.getUid()).removeValue();
             limparCampos();
         }
         return true;
