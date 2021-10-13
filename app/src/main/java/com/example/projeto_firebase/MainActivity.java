@@ -89,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void inicializarFirebase(){
         FirebaseApp.initializeApp(MainActivity.this);
+
         firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(true);
+        //firebaseDatabase.setPersistenceEnabled(true);
         databaseReference = firebaseDatabase.getReference();
         databaseReference.keepSynced(true);
     }
